@@ -15,6 +15,16 @@ class Debug
     m = Qt::MessageBox.new(Qt::MessageBox::Question, "Confirm", text, Qt::MessageBox::Cancel | Qt::MessageBox::No | Qt::MessageBox::Yes)
     m.exec()
   end
+
 end
 
+class WS
+  def self.encode(uri)
+    URI.encode(uri).gsub('/', '%2F')
+  end
+  
+  def self.http
+    Net::HTTP.new("localhost", 4567)
+  end
+end
   

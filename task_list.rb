@@ -3,7 +3,6 @@ class TaskList
   def initialize(filename)
     @filename = filename
     @taskList = []
-    
     load()
   end
 
@@ -28,15 +27,13 @@ class TaskList
   ######
   def allocate(timeItem, newName)
     oldTask = timeItem.old_task_item
-    newTask = lookup(newName)
+    newTask = lookup(newName) # get
     
     if newTask.nil? && (oldTask.nil? || oldTask == unnamed_task)
-      # in this case we know we are going to be creating a new task
-      newTask = add(newName)
+      # creating a new task, because it doesn't exist and we can rename the old one
+      newTask = add(newName) #put
     end
     
-    
-    # if task is new, oldName = nil
     unless oldTask == newTask 
       # do nothing, if the task isn't changing
       
@@ -68,7 +65,7 @@ class TaskList
           end
           
           if response == Qt::MessageBox::No
-            newTask = add(newName)
+            newTask = add(newName) # put
             newTask.notes = oldTask.notes
             oldTask.removeTime(timeItem)
             newTask.addTime(timeItem)
@@ -95,7 +92,7 @@ class TaskList
             end
             
             oldTask.removeAllTime
-            oldTask.notes = nil?
+            oldTask.notes = ""
           else
             # cancel merge
             newTask = oldTask
@@ -131,43 +128,76 @@ class TaskList
   end
   
   def add(taskName)
-    task = TaskItem.new(taskName)
+    task = TaskItem.new(taskName, nil)
       
     @taskList << task
     task
   end
   
   def save()
-    begin 
-      File.open(@filename, 'w') do |f|
-        f.puts Marshal::dump(@taskList)
+    #return
+    #begin 
+    #  File.open(@filename, 'w') do |f|
+    #    f.puts Marshal::dump(@taskList)
+    #  end
+    #rescue
+    #  Debug.alert("Failed to save task data to file") # will break because QT is finished
+    #end
+    
+    failed_save = false
+    @taskList.each do |ti|
+      begin
+          if !ti.save
+            failed_save = true
+          end
+      rescue
+        failed_save = true
       end
-    rescue
-      Debug.alert("Failed to save task data") # will break because QT is finished
     end
+  
+    puts "Failed to save some task data to database" if failed_save
+    
   end
   
   def load()
+    #begin
+    #  data = ""
+    #  File.open(@filename, 'r') do |f|
+    #    while line=f.gets
+    #      data+=line
+    #    end
+    #  end
+    #      
+    #  taskListUnMarshalled = Marshal::load(data)
+    #  
+    #  taskListUnMarshalled.each do | t |
+    #    task = TaskItem.new(nil)
+    #    task.name = t.name
+    #    task.notes = t.notes
+    #    #@taskList << task
+    #  end
+    #  
+    #rescue
+    #  Debug.alert("Failed to task load data")
+    #end
     begin
-      data = ""
-      File.open(@filename, 'r') do |f|
-        while line=f.gets
-          data+=line
-        end
+      TaskItem.all.each do |ti|
+        ti.setup
+        puts ti.notes
+        @taskList << ti
       end
-          
-      taskListUnMarshalled = Marshal::load(data)
-      
-      taskListUnMarshalled.each do | t |
-        task = TaskItem.new(nil)
-        task.name = t.name
-        task.notes = t.notes
-        @taskList << task
-      end
-      
     rescue
-      Debug.alert("Failed to task load data")
+    
     end
+    #document = Net::HTTP.get(URI.parse('http://localhost:9393/tasks'))
+    #response = JSON.parse(document)
+    
+    #response.each do |ti| 
+    #  task = TaskItem.new(nil)
+    #  task.id = ti["id"]
+    #  task.name = ti["name"]
+    #  task.notes = ti["notes"]
+    #  @taskList << task
+    #end
   end
-  
 end
