@@ -29,7 +29,7 @@ app = Qt::Application.new(ARGV)
 
 #taskList = TaskList.new('task.marshal')
 taskList = TaskListWS.new()
-timeList = TimeListWS.new(taskList)
+timeList = TimeList.new('time.marshal', taskList)
 
 loggerView = LoggerView.new(timeList, taskList)
 loggerView.show()

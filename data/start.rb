@@ -38,6 +38,7 @@ end
 # because we have the natural key and know the
 # url so PUT's idempotence is a better fit
 put '/task/:name' do
+  puts 'here'
   data = JSON.parse(request.body.read)
   
   if params[:name].nil? then
@@ -45,7 +46,8 @@ put '/task/:name' do
   else
     task = TaskItem.get(params[:name])
     if task.nil?
-      task = TaskItem.new( params[:name] )
+      task = TaskItem.new()
+      task.name =  params[:name] 
       task.notes = data['notes'] unless data['notes'].nil?
       msg = "creating task: #{params[:name]}"
     else
