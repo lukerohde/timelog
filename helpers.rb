@@ -26,5 +26,24 @@ class WS
   def self.http
     Net::HTTP.new("localhost", 4567)
   end
+  
+  def self.get_data(url)
+  
+    response = WS.http.request_get(url)
+    
+    json = ""
+    json = response.read_body if response.kind_of?(Net::HTTPSuccess)
+    
+    data = nil
+    data = JSON.parse(json) unless json == ""
+    
+    data
+  end
+  
+  def self.put_data(url, json)
+    response = WS.http.request_put(url, json)
+    response
+  end
 end
+  
   
