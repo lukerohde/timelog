@@ -5,7 +5,8 @@ require 'dm-core'
 require 'dm-validations'
 require 'dm-timestamps'
 require 'dm-migrations'
-require './task_item.rb'
+require './task_item_db.rb'
+require './time_item_db.rb'
 
 get '/tasks' do
   data = []
@@ -78,6 +79,20 @@ delete '/task/:name' do
     else
       status 500
     end
+  end
+end
+
+
+get '/times' do
+  data = []
+  data = TimeItem.all.each do  |ti| 
+    data << ti
+  end
+  if data.nil? then 
+    status 404
+  else
+    status 200
+    body(data.to_a.to_json)
   end
 end
 

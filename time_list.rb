@@ -60,6 +60,24 @@ class TimeList < Qt::Object # only needed for weird connection between timeItem 
     rescue
       Debug.alert("Failed to save time data") # will break because QT is finished
     end
+    
+    #failed_save = false
+    #@timeList.each do |ti|
+    #  #begin
+    #      t = TimeItemDB.new()
+    #      t.task = ti.task
+    #      t.time_secs = ti.time_secs
+    #      t.start_time = ti.start_time
+    #      
+    #      if !t.save
+    #        failed_save = true
+    #      end
+    #  #rescue
+    #  #  failed_save = true
+    #  #end
+    #end
+    #puts("Failed to save time data") if failed_save == true # will break because QT is finished
+    
   end
   
   def load()

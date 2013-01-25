@@ -1,5 +1,6 @@
 
 class TimeItem < Qt::Object
+  attr_accessor :id
   attr_accessor :oldTask
   attr_accessor :task
   attr_accessor :task_item
@@ -15,6 +16,7 @@ class TimeItem < Qt::Object
     @taskList = taskList 
     
     @task = TimeItem.unnamed
+    @id = nil
     @old_task_time = nil
     @task_time = nil
     @old_time_secs = nil
